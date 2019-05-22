@@ -1,5 +1,5 @@
 <template>
-  <Article />
+  <Article v-bind:id="id"/>
 </template>
 
 <script>
@@ -8,6 +8,9 @@
   export default {
     components: {
       Article
-    }
+    },
+    props: {
+      id: String
+    },
   }
 </script>
