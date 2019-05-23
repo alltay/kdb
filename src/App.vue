@@ -131,7 +131,7 @@ export default {
   data () {
     return {
       drawer: true,
-      main_url: 'http://127.0.0.1:8000/', 
+      main_url: 'http://127.0.0.1:8000/api/', 
       cats: [],
       tags: [],
       search: ""

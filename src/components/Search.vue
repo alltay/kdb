@@ -50,6 +50,7 @@ export default {
     id: String,
     category: String,
     search: String,
+    main_url: String
   },
   data () {
     return {
@@ -62,7 +63,7 @@ export default {
       this.items = [];
       if (this.search) {
         axios
-          .get('http://127.0.0.1:8000/articles/?search=' + this.search + '&format=json')
+          .get(this.main_url + 'articles/?search=' + this.search + '&format=json')
           .then(response => (this.items = response.data));
       }
     },

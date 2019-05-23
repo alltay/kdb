@@ -1,5 +1,6 @@
 <template>
-  <Article v-bind:id="id"/>
+  <Article v-bind:id="id" 
+           v-bind:main_url="main_url"/>
 </template>
 
 <script>
@@ -10,7 +11,8 @@
       Article
     },
     props: {
-      id: String
+      id: String,
+      main_url: String
     },
   }
 </script>

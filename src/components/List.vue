@@ -95,7 +95,7 @@ export default {
     getArticles: function (category) {
     //Get articles for this category
       axios
-        .get(this.main_url + '/articles/?' + category + '=' + this.id + '&format=json')
+        .get(this.main_url + 'articles/?' + category + '=' + this.id + '&format=json')
         .then(response => (this.items = response.data));
     },
     getListInfo: function (category) {
@@ -115,7 +115,7 @@ export default {
           .then(response => (this.filter_list = response.data));
       } else if (this.category == "tag") {
         axios
-          .get(this.main_url + '/categories/?&format=json')
+          .get(this.main_url + 'categories/?&format=json')
           .then(response => (this.filter_list = response.data));
       }
     },
@@ -129,7 +129,7 @@ export default {
         }
       }
       axios
-        .get(this.main_url + 'articles/?' + this.category + '=' + this.cat.id + this.filter_string + '&format=json')
+        .get(this.main_url + 'articles/?' + this.category + '=' + this.id + this.filter_string + '&format=json')
         .then(response => (this.items = response.data));
       }
   },

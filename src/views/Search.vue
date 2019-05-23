@@ -1,5 +1,6 @@
 <template>
-  <Search v-bind:search="search"/>
+  <Search v-bind:search="search"
+          v-bind:main_url="main_url"/>
 </template>
 
 <script>
@@ -11,6 +12,7 @@
     },
     props: {
       search: String,
+      main_url: String
   },
   }
 </script>
