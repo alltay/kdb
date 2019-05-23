@@ -15,24 +15,27 @@
         </v-flex>
         <v-flex>
           <v-card>
+            <Loading v-if="!input.text"/>
             <v-card-text v-html="compiledMarkdown">
             </v-card-text>
           </v-card>
         </v-flex>
       </v-layout>
-          <v-card>
-      <v-card-text>
-        <div class="text-lg-left">
-          Категории: <span v-for="cat in input.category">
-            <v-btn flat small color="primary" v-bind:to="'/lists/category/' + cat.id">{{cat.name}}</v-btn> </span>
-        </div>
-        <div class="text-md-left">
-          Отделы: <span v-for="tag in input.tag">
-              <v-btn flat small color="primary" v-bind:to="'/lists/tag/' + tag.id">{{tag.name}}</v-btn>
-            </span>
-        </div>
-      </v-card-text>
-    </v-card>
+      <v-card>
+        <v-card-text>
+          <div class="text-lg-left">
+            Категории: <span v-for="cat in input.category"
+                             v-bind:key="cat.id">
+              <v-btn flat small color="primary" v-bind:to="'/lists/category/' + cat.id">{{cat.name}}</v-btn> </span>
+          </div>
+          <div class="text-md-left">
+            Отделы: <span v-for="tag in input.tag"
+                          v-bind:key="tag.id">
+                <v-btn flat small color="primary" v-bind:to="'/lists/tag/' + tag.id">{{tag.name}}</v-btn>
+              </span>
+          </div>
+        </v-card-text>
+      </v-card>
     </v-container>
 </template>
 
@@ -40,10 +43,12 @@
 
 import marked from 'marked'
 import lodash from 'lodash'
+import Loading from './Loading'
+
 
 export default {
   name: 'Article',
-  components: {marked, lodash},
+  components: {Loading},
   props: {
     id: String,
     msg: String,
@@ -53,12 +58,12 @@ export default {
     return {
       cats: '',
       items: '',
-      input: {text:'# hello'},
+      input: {text:''},
       edit: false,
     }
   },
   mounted() {
-    axios
+    this.axios
       .get(this.main_url + 'articles/' + this.id + '/?format=json')
       .then(response => (this.input = response.data));
   },
@@ -73,7 +78,7 @@ export default {
     }, 300),
 
     saveText: function () {
-      axios
+      this.axios
         .put(this.main_url + 'articles/' + this.id + '/?format=json', this.input)
         .then(response => (this.cats = response.data))
         .then(alert("Сохранено"));

@@ -15,6 +15,7 @@
           </v-btn>
           </v-toolbar>
           <v-list two-line>
+            <loading v-if="!items"/>
             <template v-for="(item, index) in items">
               <v-list-tile v-bind:key="index"
                            avatar
@@ -29,10 +30,12 @@
                     </router-link>
                   </v-list-tile-title>
                   <v-list-tile-sub-title> Отделы:
-                    <span v-for="tag in item.tag">{{ tag.name }} </span>
+                    <span v-for="tag in item.tag"
+                          v-bind:key="tag.id">{{ tag.name }} </span>
                   </v-list-tile-sub-title>
                   <v-list-tile-sub-title> Категории: 
-                    <span v-for="category in item.category">{{ category.name }} </span>
+                    <span v-for="category in item.category"
+                          v-bind:key="category.id">{{ category.name }} </span>
                   </v-list-tile-sub-title>
                 </v-list-tile-content>
                 <v-list-tile-action>
@@ -73,8 +76,11 @@
 
 <script>
 
+import Loading from './Loading'
+
 export default {
   name: 'List',
+  components: {Loading},
   props: {
     id: String,
     category: String,
@@ -94,7 +100,7 @@ export default {
   methods: {
     getArticles: function (category) {
     //Get articles for this category
-      axios
+      this.axios
         .get(this.main_url + 'articles/?' + category + '=' + this.id + '&format=json')
         .then(response => (this.items = response.data));
     },
@@ -103,23 +109,24 @@ export default {
       if (category == "category"){
         category = "categorie"
       }
-      axios
+      this.axios
         .get(this.main_url + category + 's/' + this.id + '/?format=json')
         .then(response => (this.cat = response.data));
     },
     getFilter: function () {
     //Get items for filtring
       if (this.category == "category") {
-        axios
+        this.axios
           .get(this.main_url + 'tags/?&format=json')
           .then(response => (this.filter_list = response.data));
       } else if (this.category == "tag") {
-        axios
+        this.axios
           .get(this.main_url + 'categories/?&format=json')
           .then(response => (this.filter_list = response.data));
       }
     },
     getFiltredItems: function () {
+      this.items = '';
       this.filter_string = '';
       for (var i = 0; i < this.filter_selected.length; i++){
         if (this.category == 'category') {
@@ -128,7 +135,7 @@ export default {
           this.filter_string = this.filter_string + "&category=" + this.filter_selected[i]
         }
       }
-      axios
+      this.axios
         .get(this.main_url + 'articles/?' + this.category + '=' + this.id + this.filter_string + '&format=json')
         .then(response => (this.items = response.data));
       }
@@ -139,13 +146,14 @@ export default {
     this.getFilter();
   },
   watch: {
-    '$route' (to, from) {
+    '$route' () {
+      this.items = '';
       this.filter_selected = [];
       this.getArticles(this.category);
       this.getListInfo(this.category);
       this.getFilter();
     },
-    filter_selected: function (new_filter_selected, old_filter_selected) {
+    filter_selected: function () {
       this.getFiltredItems();
     },
   }

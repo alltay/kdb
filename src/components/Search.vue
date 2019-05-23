@@ -7,6 +7,7 @@
             <v-toolbar-title>Результаты поиска</v-toolbar-title>
           </v-toolbar>
           <v-list two-line>
+            <Loading v-if="!items"/>
             <template v-for="(item, index) in items">
               <v-list-tile v-bind:key="index"
                            avatar
@@ -21,10 +22,12 @@
                     </router-link>
                   </v-list-tile-title>
                   <v-list-tile-sub-title> Отделы:
-                    <span v-for="tag in item.tag">{{ tag.name }} </span>
+                    <span v-for="tag in item.tag"
+                          v-bind:key="tag.id">{{ tag.name }} </span>
                   </v-list-tile-sub-title>
                   <v-list-tile-sub-title> Категории: 
-                    <span v-for="category in item.category">{{ category.name }} </span>
+                    <span v-for="category in item.category"
+                          v-bind:key="category.id">{{ category.name }} </span>
                   </v-list-tile-sub-title>
                 </v-list-tile-content>
                 <v-list-tile-action>
@@ -44,8 +47,11 @@
 
 <script>
 
+import Loading from './Loading'
+
 export default {
   name: 'Search',
+  components: {Loading},
   props: {
     id: String,
     category: String,
@@ -55,14 +61,14 @@ export default {
   data () {
     return {
       cat: '',
-      items: [],
+      items: '',
     }
   },
   methods: {
     getResults: function () {
-      this.items = [];
+      this.items = '';
       if (this.search) {
-        axios
+        this.axios
           .get(this.main_url + 'articles/?search=' + this.search + '&format=json')
           .then(response => (this.items = response.data));
       }
@@ -72,7 +78,7 @@ export default {
     this.getResults();
   },
   watch: {
-    '$route' (to, from) {
+    '$route' () {
       this.getResults();
     }
  }

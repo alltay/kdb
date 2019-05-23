@@ -36,7 +36,7 @@
                 <v-list-tile-title>По категориям</v-list-tile-title>
               </v-list-tile>
             </template>
-  
+            <Loading v-if="!cats"/>
             <v-list-tile
               v-for="cat in cats"
               v-bind:key="cat.id"
@@ -44,7 +44,6 @@
             >
               <v-list-tile-title v-text="cat.name"></v-list-tile-title>
               <v-list-tile-action>
-                <v-icon v-text=""></v-icon>
               </v-list-tile-action>
             </v-list-tile>
           </v-list-group>
@@ -58,6 +57,7 @@
                 <v-list-tile-title>По отделам</v-list-tile-title>
               </v-list-tile>
             </template>
+            <Loading v-if="!tags"/>
             <v-list-tile
               v-for="tag in tags"
               v-bind:key="tag.id"
@@ -65,7 +65,6 @@
             >
               <v-list-tile-title v-text="tag.name"></v-list-tile-title>
               <v-list-tile-action>
-                <v-icon v-text=""></v-icon>
               </v-list-tile-action>
             </v-list-tile>
           </v-list-group>
@@ -75,7 +74,7 @@
 
     <v-toolbar app fixed clipped-left height="50px" color="blue-grey" dark>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title>Application</v-toolbar-title>
+      <v-toolbar-title>Mk-Docs</v-toolbar-title>
 
     <v-spacer></v-spacer>
     <form
@@ -118,30 +117,29 @@
 </template>
 
 <script>
-import Article from './components/Article'
+
+import Loading from './components/Loading'
 
 export default {
   name: 'App',
-  components: {
-    Article
-  },
   props: {
     source: String
   },
+  components: {Loading},
   data () {
     return {
       drawer: true,
       main_url: 'http://127.0.0.1:8000/api/', 
-      cats: [],
-      tags: [],
-      search: ""
+      cats: '',
+      tags: '',
+      search: ''
     }
   },
   mounted() {
-    axios
+    this.axios
       .get(this.main_url + 'categories/?format=json')
       .then(response => (this.cats = response.data));
-    axios
+    this.axios
       .get(this.main_url + 'tags/?format=json')
       .then(response => (this.tags = response.data));
   },
