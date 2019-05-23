@@ -11,7 +11,7 @@
               color="teal"
               @click.stop="drawer = !drawer"
             >
-            Toggle
+            Фильтры
           </v-btn>
           </v-toolbar>
           <v-list two-line>
