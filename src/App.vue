@@ -100,6 +100,10 @@
      <v-icon dark>search</v-icon>
     </v-btn>
     <v-spacer></v-spacer>
+    <div>
+      <v-btn flat small color="error"
+             v-on:click="Exit()">Выход</v-btn>
+    </div>
     </v-toolbar>
     <v-content>
     
@@ -132,10 +136,23 @@ export default {
       main_url: 'http://127.0.0.1:8000/api/', 
       cats: '',
       tags: '',
-      search: ''
+      search: '',
+      user: '',
+    }
+  },
+  methods: {
+    Exit: function () {
+      //Clear user data
+      localStorage.token = "";
+      this.$router.push({ name: 'Login' });
     }
   },
   mounted() {
+    this.drawer = true;
+    if (localStorage.token == "Token " || !localStorage.token){
+      this.$router.push({ name: 'Login' })
+    }
+    this.axios.defaults.headers.common['Authorization'] = localStorage.token;
     this.axios
       .get(this.main_url + 'categories/?format=json')
       .then(response => (this.cats = response.data));
@@ -143,6 +160,12 @@ export default {
       .get(this.main_url + 'tags/?format=json')
       .then(response => (this.tags = response.data));
   },
+  updated() {
+    if (localStorage.token == "Token " || !localStorage.token){
+      this.$router.push({ name: 'Login' });
+      this.drawer = false;
+    }
+  }
 }
 </script>
 <style>
